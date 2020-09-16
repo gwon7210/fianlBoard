@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>board list!!</h1>
+
+
+    <table>
+        <thead>
+        <tr>
+            <th class="one wide">번호</th>
+            <th class="ten wide">글제목</th>
+            <th class="two wide">작성자</th>
+            <th class="three wide">작성일</th>
+        </tr>
+        </thead>
+
+        <form action="/searchContentByContentWord">
+            <input type="text" name="word">
+            <input type="submit" value="검색">
+        </form>
+
+        <br>
+
+        <form action="/gotoContent">
+            <input type="submit" value="글 작성">
+        </form>
+
+         <tbody>
+        <!-- CONTENTS !-->
+        <tr th:each="board : ${boardList}">
+
+            <td>
+                <span th:text="${board.id}"></span>
+            </td>
+
+            <td>
+                <a th:href="@{/seeContent (contentId=${board.id}, contentMaker=${board.user_id}) }">
+                    <span th:text="${board.title}"></span>
+                </a>
+            </td>
+
+            <td>
+                <span th:text="${board.user_id}"></span>
+            </td>
+            <td>
+                <span th:text="${board.writetime}"></span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</body>
+</html>

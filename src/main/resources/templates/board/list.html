@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p1>here are board lists!</p1>
+<h1 th:text="${result}">기본 메시지</h1>
+<h1 >님 환영합니다 !</h1>
+<div>세션값 확인</div>
+
+<span th:text="${session['userid']}"></span>
+
+<form action="/gotoContent" method="get">
+    <input type="submit" value="게시글 쓰기 go!">
+</form>
+
+</body>
+</html>

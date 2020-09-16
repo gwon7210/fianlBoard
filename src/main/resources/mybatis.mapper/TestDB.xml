@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.simplify.sample.db.mapper.TestMapper">
+
+    <select id="getAll" resultType="com.simplify.sample.db.dto.Test">
+        SELECT * FROM test
+    </select>
+
+    <select id="checkUserInfo" parameterType="memberVO" resultType="int">
+        select count(*) from user where id = (#{id}) and pass=(#{pass})
+    </select>
+
+    <insert id="insertMainList" parameterType="memberVO">
+        insert into user (id,pass) values (#{id}, #{pass})
+    </insert>
+
+     <insert id="insertContent" parameterType="contentVO">
+        insert into board (title, content, user_id,delpass) value (#{title},#{content},#{user_id},#{delpass})
+    </insert>
+
+    <select id="getAllContent" resultType="contentVO">
+        SELECT id, title, content, writetime FROM board
+     </select>
+
+    <select id="getContent" resultType="com.simplify.sample.db.dto.allcontentVO">
+        SELECT id, title, content, delpass, user_id FROM board
+     </select>
+
+    <select id="getContentDetail" resultType="contentVO" parameterType="contentVO">
+        SELECT title, content, delpass, user_id FROM board  WHERE id = (#{id})
+    </select>
+
+    <select id="findContentById" resultType="contentVO">
+        SELECT id FROM board
+    </select>
+
+    <update id="updateContent" parameterType="contentVO">
+        UPDATE board SET title = (#{title}), delpass= (#{delpass}),content= (#{content}) where id = (#{id})
+    </update>
+
+    <insert id="insertCommnet" parameterType="commentVO">
+        insert into comment(user_id, board_id, content) value(#{user_id},#{board_id},#{content})
+    </insert>
+
+     <!--    commentVO에 user_id, board_id 생성자를 만들었을 때 오류가 나는 이유?-->
+    <select id="findCommentsByBoardId" parameterType="contentVO" resultType="commentVO">
+        select user_id, content from comment where board_id = (#{id})
+    </select>
+
+    <delete id="deleteContentById" parameterType="int">
+        DELETE from board WHERE id = (#{id})
+    </delete>
+
+    <select id="searchContentByContentWord" parameterType="String" resultType="contentVO">
+        select * from board where content like CONCAT('%',#{word},'%') or title like CONCAT('%',#{word},'%')
+    </select>
+
+<!--    ???db에는 varchar로 저장되어 있는데, resultType로 Stirng 을 지정해도 되는가? 내가 맞추는 건가가 db가 맞추는 건가 ?-->
+<!--    ???이 코드와 아래 코드의 차이점은? 오류 발생-->
+<!--    <select id="compareWriterAndSessionUser" parameterType="int" resultType="String">-->
+<!--        select user_id from board where id = ({#sessionId})-->
+<!--    </select>-->
+
+<!--    <select id="compareWriterAndSessionUser" resultType="String" parameterType="int">-->
+<!--        SELECT user_id FROM board  WHERE id = (#{id})-->
+<!--    </select>-->
+
+    <select id="compareWriterAndSessionUser" resultType="contentVO" parameterType="int">
+        SELECT user_id, delpass FROM board  WHERE id = (#{id})
+    </select>
+
+</mapper>
