@@ -20,14 +20,12 @@
 </div>
 
 <div>
-
-
-
 </div>
      <button id="deleteBtn" >글 지우기</button>
      <button id="updateBtn">글 수정</button>
 
 <form action="deleteContent" id="goToDeleteContent" method="post">
+    <input type="hidden" name="_method" value="delete">
     <input type="text" name="dlps" id="dlps" placeholder="삭제 비밀번호">
     <input id ="conId" name="contentId" type="hidden" th:value="${contentId}">
     <input id ="contentUserId"name="contentUserId" type="hidden" th:value="${contentUserId}" >

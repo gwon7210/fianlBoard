@@ -212,7 +212,7 @@ public class BoardController {
 
     //content 삭제하기
     //??? DeleteMapping 으로 받으려 시도했지만 템플렛에서 method가 post 와 get 둘 밖에 없음
-    @PostMapping("deleteContent")
+    @DeleteMapping("deleteContent")
     public String deleteContent(@RequestParam int contentId, @RequestParam String contentUserId,@RequestParam int dlps, HttpServletRequest req, Model model){
 
         //세션을 통해서 접속중인 user_id 생성
