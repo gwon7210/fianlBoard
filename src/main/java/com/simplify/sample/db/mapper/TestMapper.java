@@ -19,8 +19,9 @@ public interface TestMapper {
     List<commentVO> findCommentsByBoardId(contentVO con) throws Exception;
     void deleteContentById(int con) throws Exception;
     List<contentVO> searchContentByContentWord(String word) throws Exception;
-//    String compareWriterAndSessionUser(int sessionId) throws Exception;
-     contentVO compareWriterAndSessionUser(int sessionId) throws Exception;
-
+//  String compareWriterAndSessionUser(int sessionId) throws Exception;
+    contentVO compareWriterAndSessionUser(int sessionId) throws Exception;
+    void initalizeId() throws Exception;
+    void setUpZero() throws Exception;
 
 }

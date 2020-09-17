@@ -72,4 +72,10 @@ public class TestService {
     public contentVO compareWriterAndSessionUser(int id) throws Exception{
         return testMapper.compareWriterAndSessionUser(id);
     }
+    public void initalizeId() throws Exception{
+        testMapper.initalizeId();
+    }
+    public void setUpZero() throws Exception{
+        testMapper.setUpZero();
+    }
 }

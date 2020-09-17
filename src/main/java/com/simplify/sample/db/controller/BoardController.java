@@ -59,6 +59,10 @@ public class BoardController {
              try {
                 testService.insertContent(con);
                 List<allcontentVO> boardList = testService.getContent();
+
+                //id에 대한 auto increment를 1씩 증가.
+                 testService.setUpZero();
+                 testService.initalizeId();
                 model.addAttribute("boardList", boardList);
                 return "board/boardlist";
 
@@ -220,7 +224,6 @@ public class BoardController {
         String user_id = (String)session.getAttribute("userid");
 
         int id = contentId;
-
         try {
             contentVO delpassAnduserId = testService.compareWriterAndSessionUser(id);
 
@@ -228,6 +231,8 @@ public class BoardController {
             //contentUserId를 받는 것은 해킹의 위험이 있다. contentId를 통해서 조회 하는 방법 사용하기기
             if(delpassAnduserId.getUser_id().equals(user_id)&& delpassAnduserId.getDelpass()==dlps ){
                 testService.deleteContentById(contentId);
+                testService.setUpZero();
+                testService.initalizeId();
             }else{
                 //템플릿에서 1차 검증을 끝낸 후 2차 검증
                 System.out.println(contentUserId);

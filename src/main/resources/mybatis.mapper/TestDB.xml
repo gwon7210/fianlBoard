@@ -55,6 +55,14 @@
         select * from board where content like CONCAT('%',#{word},'%') or title like CONCAT('%',#{word},'%')
     </select>
 
+    <update id="initalizeId">
+         UPDATE `board` SET id = @COUNT:=@COUNT+1;
+    </update>
+
+    <update id="setUpZero">
+                SET @COUNT = 0;
+    </update>
+
 <!--    ???db에는 varchar로 저장되어 있는데, resultType로 Stirng 을 지정해도 되는가? 내가 맞추는 건가가 db가 맞추는 건가 ?-->
 <!--    ???이 코드와 아래 코드의 차이점은? 오류 발생-->
 <!--    <select id="compareWriterAndSessionUser" parameterType="int" resultType="String">-->
@@ -68,5 +76,6 @@
     <select id="compareWriterAndSessionUser" resultType="contentVO" parameterType="int">
         SELECT user_id, delpass FROM board  WHERE id = (#{id})
     </select>
+
 
 </mapper>
