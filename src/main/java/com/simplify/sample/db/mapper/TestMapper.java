@@ -23,5 +23,6 @@ public interface TestMapper {
     contentVO compareWriterAndSessionUser(int sessionId) throws Exception;
     void initalizeId() throws Exception;
     void setUpZero() throws Exception;
+    List<allcontentVO> testGetContent(pageNumber p) throws Exception;
 
 }

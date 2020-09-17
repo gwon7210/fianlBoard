@@ -78,4 +78,9 @@ public class TestService {
     public void setUpZero() throws Exception{
         testMapper.setUpZero();
     }
+
+    public List<allcontentVO> testGetContent(pageNumber pageNumber) throws Exception{
+        return testMapper.testGetContent(pageNumber);
+    }
+
 }

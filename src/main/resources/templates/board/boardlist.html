@@ -7,7 +7,6 @@
 <body>
     <h1>board list!!</h1>
 
-
     <table>
         <thead>
         <tr>
@@ -51,10 +50,17 @@
             </td>
         </tr>
         </tbody>
-
-
-
-
     </table>
+
+    <th:block th:each="num: ${#numbers.sequence(1,howManyContnet)}">
+
+        <form action="secondShowList">
+        <button th:text="${num}"  style="float:left;"></button>
+            <input type="hidden" name="page" id="page" th:value="${num}">
+        </form>
+
+    </th:block>
+
 </body>
+
 </html>

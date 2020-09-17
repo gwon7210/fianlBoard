@@ -26,6 +26,11 @@
         SELECT id, title, content, delpass, user_id FROM board
      </select>
 
+    <select id="testGetContent" resultType="com.simplify.sample.db.dto.allcontentVO" parameterType="pageNumber">
+        SELECT id, title, content, delpass, user_id FROM board where id between (#{startNum}) AND (#{endNum})
+     </select>
+
+
     <select id="getContentDetail" resultType="contentVO" parameterType="contentVO">
         SELECT title, content, delpass, user_id FROM board  WHERE id = (#{id})
     </select>

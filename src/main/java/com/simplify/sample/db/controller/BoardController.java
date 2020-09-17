@@ -31,21 +31,82 @@ public class BoardController {
     }
 
     //list 넣기
+    //page 타입을 int로 넣으면 오류가 나는데 이유 알
     @GetMapping("/showList")
-    public String showList(HttpServletRequest req, Model model) {
+    public String showList(HttpServletRequest req, @RequestParam(required = false) Integer page, Model model) throws Exception {
+
         HttpSession session = req.getSession();
         String user_id = (String)session.getAttribute("userid");
 
-        try{
-        List<allcontentVO> boardList = testService.getContent();
-        model.addAttribute("boardList", boardList);
+        pageNumber pageNum;
 
-        return "board/boardlist";
+        List<allcontentVO> allBoardList;
+        List<allcontentVO> boardList;
+
+//        boardList = testService.testGetContent(pagenumber);
+
+        try{
+            allBoardList = testService.getContent();
+            boardList = testService.testGetContent(new pageNumber(1,5));
+
         }catch (Exception e){
             log.error("게시판 리스트 생성중 오류 발생");
             e.printStackTrace();
             return "/forError";
         }
+
+        //content개수가 5로 나누어 떨어지면 페이지를 몫만큼 생성, 나머지가 있으면 몫+1 로 생성하기 -> 버튼의 개수
+        if(allBoardList.size()%5==0){
+            model.addAttribute("howManyContnet",allBoardList.size()/5);
+            pageNum = new pageNumber(0,5);
+            allBoardList = testService.testGetContent(pageNum);
+
+        }else{
+            model.addAttribute("howManyContnet",(allBoardList.size()/5)+1);
+            pageNum = new pageNumber(0,5);
+            allBoardList = testService.testGetContent(pageNum);
+        }
+
+        model.addAttribute("boardList", boardList);
+
+        return "board/boardlist";
+    }
+
+    @GetMapping("/secondShowList")
+    public String secondShowList(HttpServletRequest req, @RequestParam(required = false) Integer page, Model model) {
+
+        log.error("페이지 넘버 :" + page);
+
+        int endNum = (int)page*5;
+
+        pageNumber pagenumber = new pageNumber(endNum-4, endNum);
+
+        HttpSession session = req.getSession();
+        String user_id = (String)session.getAttribute("userid");
+
+        List<allcontentVO> boardList;
+        List<allcontentVO> allBoardList;
+
+        try{
+            allBoardList = testService.getContent();
+            boardList = testService.testGetContent(pagenumber);
+        }catch (Exception e){
+            log.error("게시판 리스트 생성중 오류 발생");
+            e.printStackTrace();
+            return "/forError";
+        }
+
+        log.error("갯수 :" + boardList.size());
+
+        //content개수가 5로 나누어 떨어지면 페이지를 몫만큼 생성, 나머지가 있으면 몫+1 로 생성하기
+        if(allBoardList.size()%5==0){
+            model.addAttribute("howManyContnet",allBoardList.size()/5);
+        }else{
+            model.addAttribute("howManyContnet",(allBoardList.size()/5)+1);
+        }
+        model.addAttribute("boardList", boardList);
+
+        return "board/boardlist";
     }
 
     //content 넣기
@@ -115,7 +176,6 @@ public class BoardController {
         }catch (Exception e){
             return "/forError";
         }
-
 
         //contentId와 sessionId를 비교하여 수정 여부 결정
         if(resultCon.getUser_id().equals(user_id)){
