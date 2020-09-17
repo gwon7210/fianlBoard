@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -97,7 +98,6 @@ public class BoardController {
         }
 
         log.error("갯수 :" + boardList.size());
-
         //content개수가 5로 나누어 떨어지면 페이지를 몫만큼 생성, 나머지가 있으면 몫+1 로 생성하기
         if(allBoardList.size()%5==0){
             model.addAttribute("howManyContnet",allBoardList.size()/5);
@@ -125,7 +125,7 @@ public class BoardController {
                  testService.setUpZero();
                  testService.initalizeId();
                 model.addAttribute("boardList", boardList);
-                return "board/boardlist";
+                return "redirect:/showList";
 
              }catch (ClassNotFoundException | SQLException e){
 
@@ -152,7 +152,7 @@ public class BoardController {
             testService.updateContent(con);
             List<allcontentVO> boardList = testService.getContent();
             model.addAttribute("boardList", boardList);
-            return "board/boardlist";
+            return "redirect:/showList";
         }catch (Exception e){
             e.printStackTrace();
             return "/forError";
@@ -264,15 +264,87 @@ public class BoardController {
     @GetMapping("/searchContentByContentWord")
     public String searchContentByContentWord(@RequestParam String word, Model model){
 
+        List<contentVO> allConList;
+        List<contentVO> conList = new ArrayList<contentVO>();
+        pageNumber pageNum;
+        word tossWord = new word(word);
+
         try {
-            List<contentVO> conList = testService.searchContentByContentWord(word);
-            model.addAttribute("boardList", conList);
-            return "board/boardlist";
+            allConList = testService.searchContentByContentWord(word);
         }catch (Exception e){
             e.printStackTrace();
             return "/forError";
         }
+
+        //처음 숫자 버튼을 누르지 않았을 경우 초기 5개의 content만 가지고 온다.
+        for(int i=0; i<5; i++) {
+            conList.add(allConList.get(i));
+        }
+
+        //검색된 결과의 개수를 세어 그만큼 필요한 버튼을 생성한다.
+        if(allConList.size()%5==0){
+            model.addAttribute("howManyContnet",allConList.size()/5);
+        }else{
+            model.addAttribute("howManyContnet",(allConList.size()/5)+1);
+        }
+
+        model.addAttribute("boardList", conList);
+        model.addAttribute("tossWord", tossWord);
+
+         return "board/boardlistForSearch";
     }
+
+    @GetMapping("/secondSearchContentByContentWord")
+    public String secondSearchContentByContentWord(@RequestParam(required = false) String word ,@RequestParam(required = false) Integer page, Model model){
+
+        List<contentVO> allConList;
+        List<contentVO> conList = new ArrayList<contentVO>();
+        List<contentVO> temList = new ArrayList<contentVO>();
+        word tossWord = new word(word);
+
+        int paging = (int)page*5;
+
+        pageNumber pageNum;
+
+        try {
+            allConList = testService.searchContentByContentWord(word);
+        }catch (Exception e){
+            e.printStackTrace();
+            return "/forError";
+        }
+
+        for(int k=paging-5; k<paging; k++){
+            temList.add(allConList.get(k));
+        }
+
+        //검색된 결과의 개수를 세어 그만큼 필요한 버튼을 생성한다.
+        if(allConList.size()%5==0){
+            model.addAttribute("howManyContnet",allConList.size()/5);
+        }else{
+            model.addAttribute("howManyContnet",(allConList.size()/5)+1);
+        }
+
+        model.addAttribute("boardList", temList);
+        model.addAttribute("tossWord", tossWord);
+
+        return "board/boardlistForSearch";
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     //content 삭제하기
     //??? DeleteMapping 으로 받으려 시도했지만 템플렛에서 method가 post 와 get 둘 밖에 없음
@@ -303,7 +375,7 @@ public class BoardController {
 
             List<allcontentVO> boardList = testService.getContent();
             model.addAttribute("boardList", boardList);
-            return "board/boardlist";
+            return "redirect:/showList";
 
         }catch (Exception e){
             e.printStackTrace();
