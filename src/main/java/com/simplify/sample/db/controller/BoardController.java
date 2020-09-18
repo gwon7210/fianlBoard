@@ -313,9 +313,16 @@ public class BoardController {
             return "/forError";
         }
 
+        //5개의 데이터를 가져온다
         for(int k=paging-5; k<paging; k++){
-            temList.add(allConList.get(k));
+            //5개 아래의 데이터가 남았을 경우 남은 데이터만 저장되도록 한다.
+            if(allConList.size()>k) {
+                temList.add(allConList.get(k));
+            }
+
         }
+
+
 
         //검색된 결과의 개수를 세어 그만큼 필요한 버튼을 생성한다.
         if(allConList.size()%5==0){
@@ -329,11 +336,6 @@ public class BoardController {
 
         return "board/boardlistForSearch";
     }
-
-
-
-
-
 
 
 
