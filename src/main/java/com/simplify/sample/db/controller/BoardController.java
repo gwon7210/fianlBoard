@@ -278,7 +278,11 @@ public class BoardController {
 
         //처음 숫자 버튼을 누르지 않았을 경우 초기 5개의 content만 가지고 온다.
         for(int i=0; i<5; i++) {
-            conList.add(allConList.get(i));
+
+            if(allConList.size()>=i+1) {
+                conList.add(allConList.get(i));
+            }
+
         }
 
         //검색된 결과의 개수를 세어 그만큼 필요한 버튼을 생성한다.
@@ -298,7 +302,6 @@ public class BoardController {
     public String secondSearchContentByContentWord(@RequestParam(required = false) String word ,@RequestParam(required = false) Integer page, Model model){
 
         List<contentVO> allConList;
-        List<contentVO> conList = new ArrayList<contentVO>();
         List<contentVO> temList = new ArrayList<contentVO>();
         word tossWord = new word(word);
 
@@ -306,6 +309,7 @@ public class BoardController {
 
         pageNumber pageNum;
 
+        //검색된 단어의 content들을 모두 가져온다
         try {
             allConList = testService.searchContentByContentWord(word);
         }catch (Exception e){
@@ -313,16 +317,14 @@ public class BoardController {
             return "/forError";
         }
 
-        //5개의 데이터를 가져온다
+        //검색된 단어의 content중 숫자 버튼을 통해 전달된 숫자를 기준으로 5개의 데이터를 가져온다
         for(int k=paging-5; k<paging; k++){
-            //5개 아래의 데이터가 남았을 경우 남은 데이터만 저장되도록 한다.
+
+            //5개 미만의 데이터가 남았을 경우 남은 데이터만 저장되도록 한다.
             if(allConList.size()>k) {
                 temList.add(allConList.get(k));
             }
-
         }
-
-
 
         //검색된 결과의 개수를 세어 그만큼 필요한 버튼을 생성한다.
         if(allConList.size()%5==0){
@@ -336,16 +338,6 @@ public class BoardController {
 
         return "board/boardlistForSearch";
     }
-
-
-
-
-
-
-
-
-
-
 
 
     //content 삭제하기
