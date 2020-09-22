@@ -107,4 +107,7 @@ public class TestService {
         return testMapper.selectKeyWord(searchword);
     }
 
+    public List<contentVO> listPage(HashMap map) throws Exception {
+        return testMapper.listPage(map);
+    }
 }

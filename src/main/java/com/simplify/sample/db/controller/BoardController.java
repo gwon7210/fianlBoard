@@ -265,60 +265,80 @@ public class BoardController {
 
     //content, title을 통해 content 검색하기
     @GetMapping("/searchContentByContentWord")
-    public String searchContentByContentWord(@RequestParam String word, Model model, @RequestParam(value = "num", required = false, defaultValue = "2") int num) throws Exception{
+    public String searchContentByContentWord(@RequestParam(required = false) String word, Model model, @RequestParam(value = "num", required = false, defaultValue = "2") int num) throws Exception{
 
 
         contentVO con = new contentVO(word,word);
+        int count;
+        // 한 페이지에 출력할 게시물 갯수
+        List<contentVO> list;
 
-        //키워드가 저장된 map을 통해서 동적 쿼리 파라미터로 전달/ title, content 옵션 분리시를 위해 Map 이용
-        HashMap<String, String> map = new HashMap<String, String>();
-
-        map.put("content", word);
-        map.put("title", word);
-
-        int count = testService.findTotalCount(map);
-
-        // 검색결 총 갯수
-//        int count = testService.findTotalCount(con);
-
-        //검색 코드
         List<contentVO> allConList;
         List<contentVO> conList = new ArrayList<contentVO>();
         word tossWord = new word(word);
 
-
-        try {
-            allConList = testService.searchContentByContentWord(word);
-        }catch (Exception e){
-            e.printStackTrace();
-            return "/forError"; }
-
-
-        //페이징
-        // 게시물 총 갯수
-
-        // 한 페이지에 출력할 게시물 갯수
-        int postNum = 10;
+        int postNum;
         // 하단 페이징 번호 ([ 게시물 총 갯수 ÷ 한 페이지에 출력할 갯수 ]의 올림)
-        int pageNum = (int)Math.ceil((double)count/postNum);
-        log.error("num  = ??" + num);
+        int pageNum;
         // 출력할 게시물
-        int displayPost = (num - 1) * postNum;
+        int displayPost;
         // 한번에 표시할 페이징 번호의 갯수
-        int pageNum_cnt = 10;
-// 표시되는 페이지 번호 중 마지막 번호
-        int endPageNum = (int)(Math.ceil((double)num / (double)pageNum_cnt) * pageNum_cnt);
-// 표시되는 페이지 번호 중 첫번째 번호
-        int startPageNum = endPageNum - (pageNum_cnt - 1);
+        int pageNum_cnt;
+        // 표시되는 페이지 번호 중 마지막 번호
+        int endPageNum;
+        // 표시되는 페이지 번호 중 첫번째 번호
+        int startPageNum;
         // 마지막 번호 재계산
-        int endPageNum_tmp = (int)(Math.ceil((double)count / (double)pageNum_cnt));
-        if(endPageNum > endPageNum_tmp) {
-            endPageNum = endPageNum_tmp;
+        int endPageNum_tmp;
+
+        //검색단어가 을 때
+        if(word != null) {
+            //키워드가 저장된 map을 통해서 동적 쿼리 파라미터로 전달/ title, content 옵션 분리시를 위해 Map 이용
+            HashMap<String, String> map = new HashMap<String, String>();
+            map.put("content", word);
+            map.put("title", word);
+            count = testService.findTotalCount(map);
+
+            try {
+                postNum = 10;
+                pageNum = (int)Math.ceil((double)count/postNum);
+                displayPost = (num - 1) * postNum;
+                pageNum_cnt = 10;
+                endPageNum = (int)(Math.ceil((double)num / (double)pageNum_cnt) * pageNum_cnt);
+                startPageNum = endPageNum - (pageNum_cnt - 1);
+                endPageNum_tmp = (int)(Math.ceil((double)count / (double)pageNum_cnt));
+
+                if(endPageNum > endPageNum_tmp) {
+                    endPageNum = endPageNum_tmp;
+                }
+
+                searchWord searchword = new searchWord(word,word,displayPost,postNum);
+                list = testService.selectKeyWord(searchword);
+
+            }catch (Exception e){
+                e.printStackTrace();
+                return "/forError"; }
+        }else{
+
+
+            count = testService.count();
+            postNum = 10;
+            pageNum = (int)Math.ceil((double)count/postNum);
+            displayPost = (num - 1) * postNum;
+            pageNum_cnt = 10;
+            endPageNum = (int)(Math.ceil((double)num / (double)pageNum_cnt) * pageNum_cnt);
+            startPageNum = endPageNum - (pageNum_cnt - 1);
+            endPageNum_tmp = (int)(Math.ceil((double)count / (double)pageNum_cnt));
+
+            if(endPageNum > endPageNum_tmp) {
+                endPageNum = endPageNum_tmp;
+            }
+            HashMap<String, Integer> map = new HashMap<String, Integer>();
+            map.put("displayPost", displayPost);
+            map.put("postNum", postNum);
+
+             list = testService.listPage(map);
         }
-
-        searchWord searchword = new searchWord(word,word,displayPost,postNum);
-
-        List<contentVO> list = testService.selectKeyWord(searchword);
 
 
         boolean prev = startPageNum == 1 ? false : true;

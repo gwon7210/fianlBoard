@@ -101,7 +101,7 @@ import java.lang.reflect.Member;
                 HttpSession session = req.getSession();
                 String sessionid = id;
                 session.setAttribute("userid",sessionid);
-                return "redirect:/showList";
+                return "redirect:/searchContentByContentWord";
 
             } else {
                 model.addAttribute("result", 0);
