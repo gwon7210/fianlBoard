@@ -176,7 +176,7 @@ public class BoardController {
 
     //content, title을 통해 content 검색하기
     @GetMapping("/searchContentByContentWord")
-    public String searchContentByContentWord(@RequestParam(required = false) String word, Model model, @RequestParam(value = "num", required = false, defaultValue = "2") int num) throws Exception{
+    public String searchContentByContentWord(@RequestParam(required = false) String word, Model model, @RequestParam(value = "num", required = false, defaultValue = "1") int num) throws Exception{
 
 
         contentVO con = new contentVO(word,word);
@@ -242,6 +242,7 @@ public class BoardController {
             if(endPageNum > endPageNum_tmp) {
                 endPageNum = endPageNum_tmp;
             }
+
             HashMap<String, Integer> map = new HashMap<String, Integer>();
             map.put("displayPost", displayPost);
             map.put("postNum", postNum);

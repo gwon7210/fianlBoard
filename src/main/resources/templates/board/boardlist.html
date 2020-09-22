@@ -62,14 +62,12 @@
 <!--    </th:block>-->
     <!--             <input type="submit" name="num" id="num" th:value="${num}" style="float:left;">-->
 
-
-    <th:if test="${prev}">
-        <form action="/listPage" >
+    <th:block th:if="${prev}">
+        <form th:action="/listPage" >
             <input type="hidden" name="num"  th:value="${startPageNum - 1}"  >
             <input type="submit" value="이전" style="float:left;">
          </form>
-    </th:if>
-
+    </th:block>
 
     <th:block  th:each="num: ${#numbers.sequence(startPageNum,endPageNum)}" >
         <form action="/listPage" >
@@ -77,12 +75,12 @@
          </form>
     </th:block >
 
-    <th:if test="${next}">
+    <th:block th:if="${next}">
         <form action="/listPage" >
-            <input type="hidden" name="num"  th:value="${endPageNum + 1}"  >
+            <input type="hidden" name="num"  th:value="${endPageNum - 1}"  >
             <input type="submit" value="다음" style="float:left;">
         </form>
-    </th:if>
+    </th:block>
 
 <!--    <th:if test="${next}">-->
 <!--        <span>[ <a href="listPage?num=${endPageNum - 1}">다음</a> ]</span>-->

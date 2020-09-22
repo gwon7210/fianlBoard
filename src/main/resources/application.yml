@@ -22,3 +22,13 @@ spring:
 #            sql:
 #              BasicBinder: TRACE
 
+#  +-----------+--------------+------+-----+---------+----------------+
+#  | Field     | Type         | Null | Key | Default | Extra          |
+#  +-----------+--------------+------+-----+---------+----------------+
+#  | id        | int(11)      | NO   | PRI | NULL    | auto_increment |
+#  | title     | varchar(45)  | NO   |     | NULL    |                |
+#  | delpass   | int(10)      | NO   |     | NULL    |                |
+#  | user_id   | varchar(45)  | NO   | MUL | NULL    |                |
+#  | writetime | timestamp(6) | YES  |     | NULL    |                |
+#  | content   | text         | YES  |     | NULL    |                |
+#  +-----------+--------------+------+-----+---------+----------------+
