@@ -30,86 +30,7 @@ public class BoardController {
     //???이런것도 예외처리 해야하나요 ?
     @GetMapping("/gotoContent")
     public String gotocontent()throws Exception{
-
         return "board/makecontent";
-    }
-
-    //list 넣기
-    //page 타입을 int로 넣으면 오류가 나는데 이유 알
-    @GetMapping("/showList")
-    public String showList(HttpServletRequest req, @RequestParam(required = false) Integer page, Model model) throws Exception {
-
-        HttpSession session = req.getSession();
-        String user_id = (String)session.getAttribute("userid");
-
-        pageNumber pageNum;
-
-        List<allcontentVO> allBoardList;
-        List<allcontentVO> boardList;
-
-//        boardList = testService.testGetContent(pagenumber);
-
-        try{
-            allBoardList = testService.getContent();
-            boardList = testService.testGetContent(new pageNumber(1,5));
-
-        }catch (Exception e){
-            log.error("게시판 리스트 생성중 오류 발생");
-            e.printStackTrace();
-            return "/forError";
-        }
-
-        //content개수가 5로 나누어 떨어지면 페이지를 몫만큼 생성, 나머지가 있으면 몫+1 로 생성하기 -> 버튼의 개수
-        if(allBoardList.size()%5==0){
-            model.addAttribute("howManyContnet",allBoardList.size()/5);
-            pageNum = new pageNumber(0,5);
-            allBoardList = testService.testGetContent(pageNum);
-
-        }else{
-            model.addAttribute("howManyContnet",(allBoardList.size()/5)+1);
-            pageNum = new pageNumber(0,5);
-            allBoardList = testService.testGetContent(pageNum);
-        }
-
-        model.addAttribute("boardList", boardList);
-
-        return "board/boardlistForSearch";
-    }
-
-    @GetMapping("/secondShowList")
-    public String secondShowList(HttpServletRequest req, @RequestParam(required = false) Integer page, Model model) {
-
-        log.error("페이지 넘버 :" + page);
-
-        int endNum = (int)page*5;
-
-        pageNumber pagenumber = new pageNumber(endNum-4, endNum);
-
-        HttpSession session = req.getSession();
-        String user_id = (String)session.getAttribute("userid");
-
-        List<allcontentVO> boardList;
-        List<allcontentVO> allBoardList;
-
-        try{
-            allBoardList = testService.getContent();
-            boardList = testService.testGetContent(pagenumber);
-        }catch (Exception e){
-            log.error("게시판 리스트 생성중 오류 발생");
-            e.printStackTrace();
-            return "/forError";
-        }
-
-        log.error("갯수 :" + boardList.size());
-        //content개수가 5로 나누어 떨어지면 페이지를 몫만큼 생성, 나머지가 있으면 몫+1 로 생성하기
-        if(allBoardList.size()%5==0){
-            model.addAttribute("howManyContnet",allBoardList.size()/5);
-        }else{
-            model.addAttribute("howManyContnet",(allBoardList.size()/5)+1);
-        }
-        model.addAttribute("boardList", boardList);
-
-        return "board/boardlistForSearch";
     }
 
     //content 넣기
@@ -122,8 +43,7 @@ public class BoardController {
             contentVO con = new contentVO(title,delpass,user_id,content);
              try {
                 testService.insertContent(con);
-//                List<allcontentVO> boardList = testService.getContent();
-//                model.addAttribute("boardList", boardList);
+
                 return "redirect:/searchContentByContentWord";
 
              }catch (ClassNotFoundException | SQLException e){
@@ -252,9 +172,6 @@ public class BoardController {
             e.printStackTrace();
             return "/forError";
         }
- /*       for(int i=0;i<listComment.size();i++){
-                System.out.println(listComment.get(i).getUser_id()); }
-*/
     }
 
     //content, title을 통해 content 검색하기
@@ -332,7 +249,6 @@ public class BoardController {
              list = testService.listPage(map);
         }
 
-
         boolean prev = startPageNum == 1 ? false : true;
         boolean next = endPageNum * pageNum_cnt >= count ? false : true;
 
@@ -355,47 +271,6 @@ public class BoardController {
 
         return "board/boardlistForSearch";
       }
-
-//    @GetMapping("/secondSearchContentByContentWord")
-//    public String secondSearchContentByContentWord(@RequestParam(required = false) String word ,@RequestParam(required = false) Integer page, Model model){
-//
-//        List<contentVO> allConList;
-//        List<contentVO> temList = new ArrayList<contentVO>();
-//        word tossWord = new word(word);
-//
-//        int paging = (int)page*5;
-//
-//        pageNumber pageNum;
-//
-//        //검색된 단어의 content들을 모두 가져온다
-//        try {
-//            allConList = testService.searchContentByContentWord(word);
-//        }catch (Exception e){
-//            e.printStackTrace();
-//            return "/forError";
-//        }
-//
-//        //검색된 단어의 content중 숫자 버튼을 통해 전달된 숫자를 기준으로 5개의 데이터를 가져온다
-//        for(int k=paging-5; k<paging; k++){
-//
-//            //5개 미만의 데이터가 남았을 경우 남은 데이터만 저장되도록 한다.
-//            if(allConList.size()>k) {
-//                temList.add(allConList.get(k));
-//            }
-//        }
-//
-//        //검색된 결과의 개수를 세어 그만큼 필요한 버튼을 생성한다.
-//        if(allConList.size()%5==0){
-//            model.addAttribute("howManyContnet",allConList.size()/5);
-//        }else{
-//            model.addAttribute("howManyContnet",(allConList.size()/5)+1);
-//        }
-//
-//        model.addAttribute("boardList", temList);
-//        model.addAttribute("tossWord", tossWord);
-//
-//        return "board/boardlistForSearch";
-//    }
 
 
     //content 삭제하기
@@ -431,101 +306,5 @@ public class BoardController {
         }
 
     }
-
-//    @RequestMapping(value = "/listPage", method = RequestMethod.GET)
-//    public String getListPage(Model model, @RequestParam(value = "num", required = false, defaultValue = "2") int num) throws Exception {
-//
-//        // 게시물 총 갯수
-//        int count = testService.count();
-//
-//        // 한 페이지에 출력할 게시물 갯수
-//        int postNum = 10;
-//
-//        // 하단 페이징 번호 ([ 게시물 총 갯수 ÷ 한 페이지에 출력할 갯수 ]의 올림)
-//        int pageNum = (int)Math.ceil((double)count/postNum);
-//        log.error("num  = ??" + num);
-//        // 출력할 게시물
-//        int displayPost = (num - 1) * postNum;
-//
-//        // 한번에 표시할 페이징 번호의 갯수
-//        int pageNum_cnt = 10;
-//
-//// 표시되는 페이지 번호 중 마지막 번호
-//        int endPageNum = (int)(Math.ceil((double)num / (double)pageNum_cnt) * pageNum_cnt);
-//
-//// 표시되는 페이지 번호 중 첫번째 번호
-//        int startPageNum = endPageNum - (pageNum_cnt - 1);
-//
-//        // 마지막 번호 재계산
-//        int endPageNum_tmp = (int)(Math.ceil((double)count / (double)pageNum_cnt));
-//
-//        if(endPageNum > endPageNum_tmp) {
-//            endPageNum = endPageNum_tmp;
-//        }
-//
-//        boolean prev = startPageNum == 1 ? false : true;
-//        boolean next = endPageNum * pageNum_cnt >= count ? false : true;
-//
-//        List list = null;
-//        list = testService.listPage(displayPost, postNum);
-//        model.addAttribute("boardList", list);
-//        model.addAttribute("pageNum", pageNum);
-//
-//        // 시작 및 끝 번호
-//        model.addAttribute("startPageNum", startPageNum);
-//        model.addAttribute("endPageNum", endPageNum);
-//
-//        // 이전 및 다음
-//        model.addAttribute("prev", prev);
-//        model.addAttribute("next", next);
-//
-//        return "board/boardlist";
-//    }
-//
-//
-//    @RequestMapping(value = "/getListPageForSearch", method = RequestMethod.GET)
-//    public String getListPageForSearch(Model model, @RequestParam(value = "num", required = false, defaultValue = "2") int num) throws Exception {
-//
-//
-//        HashMap<String, String> map = new HashMap<String, String>();
-////        map.put("content", word);
-////        map.put("title", word);
-//        // 게시물 총 갯수
-//        int count = testService.count();
-//
-//
-//        // 한 페이지에 출력할 게시물 갯수
-//        int postNum = 10;
-//        // 하단 페이징 번호 ([ 게시물 총 갯수 ÷ 한 페이지에 출력할 갯수 ]의 올림)
-//        int pageNum = (int)Math.ceil((double)count/postNum);
-//        log.error("num  = ??" + num);
-//        // 출력할 게시물
-//        int displayPost = (num - 1) * postNum;
-//        // 한번에 표시할 페이징 번호의 갯수
-//        int pageNum_cnt = 10;
-//// 표시되는 페이지 번호 중 마지막 번호
-//        int endPageNum = (int)(Math.ceil((double)num / (double)pageNum_cnt) * pageNum_cnt);
-//// 표시되는 페이지 번호 중 첫번째 번호
-//        int startPageNum = endPageNum - (pageNum_cnt - 1);
-//        // 마지막 번호 재계산
-//        int endPageNum_tmp = (int)(Math.ceil((double)count / (double)pageNum_cnt));
-//        if(endPageNum > endPageNum_tmp) {
-//            endPageNum = endPageNum_tmp;
-//        }
-//        boolean prev = startPageNum == 1 ? false : true;
-//        boolean next = endPageNum * pageNum_cnt >= count ? false : true;
-//        List list = null;
-//        list = testService.listPage(displayPost, postNum);
-//        model.addAttribute("boardList", list);
-//        model.addAttribute("pageNum", pageNum);
-//        // 시작 및 끝 번호
-//        model.addAttribute("startPageNum", startPageNum);
-//        model.addAttribute("endPageNum", endPageNum);
-//        // 이전 및 다음
-//        model.addAttribute("prev", prev);
-//        model.addAttribute("next", next);
-//
-//        return "board/boardlist";
-//    }
 
 }
