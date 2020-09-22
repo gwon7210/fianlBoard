@@ -99,5 +99,12 @@ public class TestService {
 
         return testMapper.listPage(data);
     }
+    public int findTotalCount(HashMap map) throws Exception {
+
+        return testMapper.findTotalCount(map);
+    }
+    public List<contentVO> selectKeyWord(searchWord searchword) throws Exception {
+        return testMapper.selectKeyWord(searchword);
+    }
 
 }

@@ -92,6 +92,36 @@
     from board
     order by id desc
     limit #{displayPost}, #{postNum}
-</select>
+    </select>
+
+    <select id="findTotalCount" parameterType="Map" resultType="int">
+        select count(*) from board
+
+        <where>
+            <if test="title != null">
+                 content LIKE CONCAT('%',#{title},'%')
+            </if>
+
+            <if test="content != null">
+                OR title LIKE CONCAT('%',#{content},'%')
+            </if>
+        </where>
+
+    </select>
+
+
+    <select id="selectKeyWord" parameterType="searchWord" resultType="contentVO">
+        SELECT * FROM board
+        WHERE
+        <if test="title != null">
+            title LIKE CONCAT('%',#{title},'%')
+        </if>
+
+        <if test="content != null">
+            OR content LIKE CONCAT('%',#{content},'%')
+        </if>
+        ORDER BY id DESC LIMIT #{displayPost}, #{postNum}
+    </select>
+
 
 </mapper>

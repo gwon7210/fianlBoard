@@ -52,16 +52,31 @@
     </tbody>
 </table>
 
-<th:block th:each="num: ${#numbers.sequence(1,howManyContnet)}">
-
-    <form action="secondSearchContentByContentWord">
-        <button th:text="${num}"  style="float:left;"></button>
-        <input type="hidden" name="page" id="page" th:value="${num}">
-        <input type="hidden" name="word" id="word" th:value="${tossWord.word}">
-
+<th:if test="${prev}">
+    <form action="/searchContentByContentWord" >
+        <input type="hidden" name="num"  th:value="${startPageNum - 1}"  >
+        <input type="submit" value="이전" style="float:left;">
+        <input type="hidden" name="word"   th:value="${tossWord.word}"  >
     </form>
+</th:if>
 
-</th:block>
+
+<th:block  th:each="num: ${#numbers.sequence(startPageNum,endPageNum)}" >
+    <form action="/searchContentByContentWord" >
+        <input type="submit" name="num"   th:value="${num}" style="float:left;">
+        <input type="hidden" name="word"   th:value="${tossWord.word}"  >
+    </form>
+</th:block >
+
+<th:if test="${next}">
+    <form action="/searchContentByContentWord" >
+        <input type="hidden" name="num"  th:value="${endPageNum + 1}"  >
+        <input type="submit" value="다음" style="float:left;">
+        <input type="hidden" name="word"   th:value="${tossWord.word}"  >
+    </form>
+</th:if>
+
+
 
 </body>
 

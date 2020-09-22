@@ -70,7 +70,6 @@
          </form>
     </th:if>
 
-<!--        <span>[ <a href="listPage?num=${startPageNum - 1}">이전</a> ]</span>-->
 
     <th:block  th:each="num: ${#numbers.sequence(startPageNum,endPageNum)}" >
         <form action="/listPage" >

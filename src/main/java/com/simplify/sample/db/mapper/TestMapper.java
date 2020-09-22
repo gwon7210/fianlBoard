@@ -27,4 +27,7 @@ public interface TestMapper {
     List<allcontentVO> testGetContent(pageNumber p) throws Exception;
     public int count() throws Exception;
     public List<contentVO> listPage(Map<String, String> map) throws Exception ;
+    public int findTotalCount(HashMap map) throws Exception;
+    public List<contentVO> selectKeyWord(searchWord searchword) throws Exception;
+
 }

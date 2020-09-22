@@ -10,12 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @Slf4j
@@ -262,41 +265,84 @@ public class BoardController {
 
     //content, title을 통해 content 검색하기
     @GetMapping("/searchContentByContentWord")
-    public String searchContentByContentWord(@RequestParam String word, Model model){
+    public String searchContentByContentWord(@RequestParam String word, Model model, @RequestParam(value = "num", required = false, defaultValue = "2") int num) throws Exception{
 
+
+        contentVO con = new contentVO(word,word);
+
+        //키워드가 저장된 map을 통해서 동적 쿼리 파라미터로 전달/ title, content 옵션 분리시를 위해 Map 이용
+        HashMap<String, String> map = new HashMap<String, String>();
+
+        map.put("content", word);
+        map.put("title", word);
+
+        int count = testService.findTotalCount(map);
+
+        // 검색결 총 갯수
+//        int count = testService.findTotalCount(con);
+
+        //검색 코드
         List<contentVO> allConList;
         List<contentVO> conList = new ArrayList<contentVO>();
-        pageNumber pageNum;
         word tossWord = new word(word);
+
 
         try {
             allConList = testService.searchContentByContentWord(word);
         }catch (Exception e){
             e.printStackTrace();
-            return "/forError";
+            return "/forError"; }
+
+
+        //페이징
+        // 게시물 총 갯수
+
+        // 한 페이지에 출력할 게시물 갯수
+        int postNum = 10;
+        // 하단 페이징 번호 ([ 게시물 총 갯수 ÷ 한 페이지에 출력할 갯수 ]의 올림)
+        int pageNum = (int)Math.ceil((double)count/postNum);
+        log.error("num  = ??" + num);
+        // 출력할 게시물
+        int displayPost = (num - 1) * postNum;
+        // 한번에 표시할 페이징 번호의 갯수
+        int pageNum_cnt = 10;
+// 표시되는 페이지 번호 중 마지막 번호
+        int endPageNum = (int)(Math.ceil((double)num / (double)pageNum_cnt) * pageNum_cnt);
+// 표시되는 페이지 번호 중 첫번째 번호
+        int startPageNum = endPageNum - (pageNum_cnt - 1);
+        // 마지막 번호 재계산
+        int endPageNum_tmp = (int)(Math.ceil((double)count / (double)pageNum_cnt));
+        if(endPageNum > endPageNum_tmp) {
+            endPageNum = endPageNum_tmp;
         }
 
-        //처음 숫자 버튼을 누르지 않았을 경우 초기 5개의 content만 가지고 온다.
-        for(int i=0; i<5; i++) {
+        searchWord searchword = new searchWord(word,word,displayPost,postNum);
 
-            if(allConList.size()>=i+1) {
-                conList.add(allConList.get(i));
-            }
+        List<contentVO> list = testService.selectKeyWord(searchword);
 
-        }
 
-        //검색된 결과의 개수를 세어 그만큼 필요한 버튼을 생성한다.
-        if(allConList.size()%5==0){
-            model.addAttribute("howManyContnet",allConList.size()/5);
-        }else{
-            model.addAttribute("howManyContnet",(allConList.size()/5)+1);
-        }
+        boolean prev = startPageNum == 1 ? false : true;
+        boolean next = endPageNum * pageNum_cnt >= count ? false : true;
 
-        model.addAttribute("boardList", conList);
+        //검색된 값만
+//        List list = null;
+//        list = testService.listPage(displayPost, postNum);
+
+        model.addAttribute("boardList", list);
+        model.addAttribute("pageNum", pageNum);
+
+        // 시작 및 끝 번호
+        model.addAttribute("startPageNum", startPageNum);
+        model.addAttribute("endPageNum", endPageNum);
+
+        // 이전 및 다음
+        model.addAttribute("prev", prev);
+        model.addAttribute("next", next);
+
         model.addAttribute("tossWord", tossWord);
 
-         return "board/boardlistForSearch";
-    }
+        return "board/boardlistForSearch";
+      }
 
     @GetMapping("/secondSearchContentByContentWord")
     public String secondSearchContentByContentWord(@RequestParam(required = false) String word ,@RequestParam(required = false) Integer page, Model model){
@@ -431,46 +477,41 @@ public class BoardController {
     @RequestMapping(value = "/getListPageForSearch", method = RequestMethod.GET)
     public String getListPageForSearch(Model model, @RequestParam(value = "num", required = false, defaultValue = "2") int num) throws Exception {
 
+
+        HashMap<String, String> map = new HashMap<String, String>();
+//        map.put("content", word);
+//        map.put("title", word);
         // 게시물 총 갯수
         int count = testService.count();
 
+
         // 한 페이지에 출력할 게시물 갯수
         int postNum = 10;
-
         // 하단 페이징 번호 ([ 게시물 총 갯수 ÷ 한 페이지에 출력할 갯수 ]의 올림)
         int pageNum = (int)Math.ceil((double)count/postNum);
         log.error("num  = ??" + num);
         // 출력할 게시물
         int displayPost = (num - 1) * postNum;
-
         // 한번에 표시할 페이징 번호의 갯수
         int pageNum_cnt = 10;
-
 // 표시되는 페이지 번호 중 마지막 번호
         int endPageNum = (int)(Math.ceil((double)num / (double)pageNum_cnt) * pageNum_cnt);
-
 // 표시되는 페이지 번호 중 첫번째 번호
         int startPageNum = endPageNum - (pageNum_cnt - 1);
-
         // 마지막 번호 재계산
         int endPageNum_tmp = (int)(Math.ceil((double)count / (double)pageNum_cnt));
-
         if(endPageNum > endPageNum_tmp) {
             endPageNum = endPageNum_tmp;
         }
-
         boolean prev = startPageNum == 1 ? false : true;
         boolean next = endPageNum * pageNum_cnt >= count ? false : true;
-
         List list = null;
         list = testService.listPage(displayPost, postNum);
         model.addAttribute("boardList", list);
         model.addAttribute("pageNum", pageNum);
-
         // 시작 및 끝 번호
         model.addAttribute("startPageNum", startPageNum);
         model.addAttribute("endPageNum", endPageNum);
-
         // 이전 및 다음
         model.addAttribute("prev", prev);
         model.addAttribute("next", next);

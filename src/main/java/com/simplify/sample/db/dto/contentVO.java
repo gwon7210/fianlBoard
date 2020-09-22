@@ -53,6 +53,11 @@ public class contentVO {
         this.delpass = delpass;
     }
 
+    public contentVO(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
     public contentVO(int id) {
         this.id = id;
     }
