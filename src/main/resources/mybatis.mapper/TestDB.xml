@@ -82,5 +82,16 @@
         SELECT user_id, delpass FROM board  WHERE id = (#{id})
     </select>
 
+    <select id="count" resultType="int">
+     select count(*) from board
+    </select>
+
+    <select id="listPage" parameterType="hashMap" resultType="contentVO">
+    select
+     id, title, delpass, user_id,content
+    from board
+    order by id desc
+    limit #{displayPost}, #{postNum}
+</select>
 
 </mapper>

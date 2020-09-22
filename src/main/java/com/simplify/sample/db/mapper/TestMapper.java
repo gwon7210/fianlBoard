@@ -4,6 +4,7 @@ import com.simplify.sample.db.dto.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface TestMapper {
     public List<Test> getAll() throws Exception;
@@ -24,5 +25,6 @@ public interface TestMapper {
     void initalizeId() throws Exception;
     void setUpZero() throws Exception;
     List<allcontentVO> testGetContent(pageNumber p) throws Exception;
-
+    public int count() throws Exception;
+    public List<contentVO> listPage(Map<String, String> map) throws Exception ;
 }

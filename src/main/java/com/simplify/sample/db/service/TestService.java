@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class TestService {
@@ -81,6 +83,21 @@ public class TestService {
 
     public List<allcontentVO> testGetContent(pageNumber pageNumber) throws Exception{
         return testMapper.testGetContent(pageNumber);
+    }
+    public int count() throws Exception {
+        return testMapper.count();
+    }
+//    public List<contentVO> listPage(Map<String, String> map) throws Exception{
+//        return testMapper.listPage(map);
+//    }
+    public List listPage(int displayPost, int postNum) throws Exception {
+
+        HashMap data = new HashMap();
+
+        data.put("displayPost", displayPost);
+        data.put("postNum", postNum);
+
+        return testMapper.listPage(data);
     }
 
 }

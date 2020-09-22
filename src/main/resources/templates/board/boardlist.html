@@ -52,15 +52,76 @@
         </tbody>
     </table>
 
-    <th:block th:each="num: ${#numbers.sequence(1,howManyContnet)}">
 
-        <form action="secondShowList">
-        <button th:text="${num}"  style="float:left;"></button>
-            <input type="hidden" name="page" id="page" th:value="${num}">
+
+
+<!--    <th:block th:each="num: ${#numbers.sequence(1,pageNum)}">-->
+<!--        <form action="/listPage" >-->
+<!--             <input type="submit" name="num" id="num" th:value="${num}" style="float:left;">-->
+<!--        </form>-->
+<!--    </th:block>-->
+    <!--             <input type="submit" name="num" id="num" th:value="${num}" style="float:left;">-->
+
+
+    <th:if test="${prev}">
+        <form action="/listPage" >
+            <input type="hidden" name="num"  th:value="${startPageNum - 1}"  >
+            <input type="submit" value="이전" style="float:left;">
+         </form>
+    </th:if>
+
+<!--        <span>[ <a href="listPage?num=${startPageNum - 1}">이전</a> ]</span>-->
+
+    <th:block  th:each="num: ${#numbers.sequence(startPageNum,endPageNum)}" >
+        <form action="/listPage" >
+            <input type="submit" name="num"   th:value="${num}" style="float:left;">
+         </form>
+    </th:block >
+
+    <th:if test="${next}">
+        <form action="/listPage" >
+            <input type="hidden" name="num"  th:value="${endPageNum + 1}"  >
+            <input type="submit" value="다음" style="float:left;">
         </form>
+    </th:if>
 
-    </th:block>
+<!--    <th:if test="${next}">-->
+<!--        <span>[ <a href="listPage?num=${endPageNum - 1}">다음</a> ]</span>-->
+<!--    </th:if>-->
 
+
+<!--    <c:if test="${prev}">-->
+<!--        <span>[ <a href="/board/listPage?num=${startPageNum - 1}">이전</a> ]</span>-->
+<!--    </c:if>-->
+
+<!--    <c:forEach begin="${startPageNum}" end="${endPageNum}" var="num">-->
+<!--  <span>-->
+<!--   <a href="/board/listPage?num=${num}">${num}</a>-->
+<!-- </span>-->
+<!--    </c:forEach>-->
+
+<!--    <c:if test="${next}">-->
+<!--        <span>[ <a href="/board/listPage?num=${endPageNum + 1}">다음</a> ]</span>-->
+<!--    </c:if>-->
+
+
+
+
+<!--    <th:block th:each="num: ${#numbers.sequence(1,howManyContnet)}">-->
+
+<!--        <form action="secondShowList">-->
+<!--            <button th:text="${num}"  style="float:left;"></button>-->
+<!--            <input type="hidden" name="page" id="page" th:value="${num}">-->
+<!--        </form>-->
+
+<!--    </th:block>-->
+<!--    <div>-->
+<!--        <c:forEach begin="1" end="${pageNum}" var="num">-->
+<!--    <span>-->
+<!--     <a href="/board/listPage?num=${num}">${num}</a>-->
+<!--  </span>-->
+<!--        </c:forEach>-->
+<!--    </div>-->
 </body>
 
 </html>
