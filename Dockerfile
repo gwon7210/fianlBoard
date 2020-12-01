@@ -9,7 +9,7 @@ VOLUME /tmp
 EXPOSE 8080
 
 # Add the application's jar to the container
-ADD ./sample-0.0.1-SNAPSHOT.jar /
+ADD /var/lib/jenkins/workspace/noahpipe2/target/sample-0.0.1-SNAPSHOT.jar /
 
 # Run the jar file
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","sample-0.0.1-SNAPSHOT.jar"]
