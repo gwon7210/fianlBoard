@@ -12,4 +12,4 @@ EXPOSE 8080
 ADD ./sample-0.0.1-SNAPSHOT.jar /
 
 # Run the jar file
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","demo-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","sample-0.0.1-SNAPSHOT.jar"]
