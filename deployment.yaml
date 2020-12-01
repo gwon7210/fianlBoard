@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: noahboard
+  labels:
+    app: noahhi
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: noahhi
+  template:
+    metadata:
+      labels:
+        app: noahhi
+    spec:
+      containers:
+      - name: noahhi
+        image: https://10.30.10.79:9443/tomorrow/noah:latest
