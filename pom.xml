@@ -74,18 +74,18 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-<!--            <plugin>-->
-<!--                <artifactId/>-->
-<!--                <groupid>org.apache.maven.plugins</groupid>-->
-<!--                <artifactid>maven-jar-plugin</artifactid>-->
-<!--                <configuration>-->
-<!--                    <archive>-->
-<!--                        <manifest>-->
-<!--                            <mainclass>Tutorial.Tutorial</mainclass>-->
-<!--                        </manifest>-->
-<!--                    </archive>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
+                  <plugin>
+                    <artifactId/>
+                    <groupid>org.apache.maven.plugins</groupid>
+                    <artifactid>maven-jar-plugin</artifactid>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <mainclass>Tutorial.Tutorial</mainclass>
+                            </manifest>
+                        </archive>
+                    </configuration>
+                </plugin>
         </plugins>
 
 
