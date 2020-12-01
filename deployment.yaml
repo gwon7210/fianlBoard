@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: noahboard
-  labels:
-    app: noahhi
 spec:
   replicas: 3
   selector:
