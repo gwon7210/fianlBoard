@@ -27,6 +27,11 @@ public class BoardController {
     @Autowired
     TestService testService;
 
+    @GetMapping("/test")
+    public String test()throws Exception{
+        return "board/makecontent";
+    }
+
     //???이런것도 예외처리 해야하나요 ?
     @GetMapping("/gotoContent")
     public String gotocontent()throws Exception{
@@ -43,7 +48,6 @@ public class BoardController {
             contentVO con = new contentVO(title,delpass,user_id,content);
              try {
                 testService.insertContent(con);
-
                 return "redirect:/searchContentByContentWord";
 
              }catch (ClassNotFoundException | SQLException e){
