@@ -26,6 +26,10 @@ public class BoardController {
 
     @Autowired
     TestService testService;
+    @GetMapping("/function3")
+    public String function3()throws Exception{
+        return "board/makecontent";
+    }
     @GetMapping("/function2")
     public String function1()throws Exception{
         return "board/makecontent";
